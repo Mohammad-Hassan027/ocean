@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+/* eslint-disable no-unused-vars */
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function SectionWrapper({ children, className }) {

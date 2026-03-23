@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import MagneticButton from '../components/MagneticButton';

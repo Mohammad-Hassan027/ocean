@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+/* eslint-disable no-unused-vars */
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 function OxygenBubble({ delay, x, size }) {
@@ -32,6 +33,13 @@ function OxygenBubble({ delay, x, size }) {
   );
 }
 
+const generateBubbles = () => [...Array(6)].map((_, i) => ({
+  id: i,
+  delay: i * 2.5,
+  x: 15 + Math.random() * 70,
+  size: 30 + Math.random() * 40
+}));
+
 export default function TwilightZone() {
   const sectionRef = useRef(null);
   
@@ -43,6 +51,8 @@ export default function TwilightZone() {
   // Parallax mapping for silhouettes
   const turtleX = useTransform(scrollYProgress, [0, 1], ["-20%", "120%"]);
   const whaleX = useTransform(scrollYProgress, [0, 1], ["120%", "-20%"]);
+
+  const [bubbles] = useState(generateBubbles);
 
   return (
     <section ref={sectionRef} className="relative w-full min-h-screen flex flex-col items-center justify-center py-32 px-4 md:px-16 overflow-hidden">
@@ -78,8 +88,8 @@ export default function TwilightZone() {
       </motion.div>
 
       {/* Floating Oxygen Bubbles Array */}
-      {[...Array(6)].map((_, i) => (
-         <OxygenBubble key={i} delay={i * 2.5} x={15 + Math.random() * 70} size={30 + Math.random() * 40} />
+      {bubbles.map((b) => (
+         <OxygenBubble key={b.id} delay={b.delay} x={b.x} size={b.size} />
       ))}
 
       <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-24 md:gap-16 items-center z-10 mix-blend-screen relative pointer-events-none">
