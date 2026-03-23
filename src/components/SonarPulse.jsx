@@ -5,7 +5,6 @@ export default function SonarPulse() {
   const [pulses, setPulses] = useState([]);
 
   useEffect(() => {
-    // Only add pulses on desktop to avoid interfering with mobile taps
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const handleClick = (e) => {
@@ -35,20 +34,21 @@ function PulseCircle({ x, y }) {
   
   useEffect(() => {
     gsap.fromTo(circleRef.current, 
-      { scale: 0, opacity: 0.6 }, 
-      { scale: 3, opacity: 0, duration: 1.5, ease: "power2.out" }
+      { scale: 0, opacity: 0.8 }, 
+      { scale: 2.5, opacity: 0, duration: 1.2, ease: "power2.out" }
     );
   }, []);
 
   return (
     <div 
       ref={circleRef}
-      className="fixed pointer-events-none rounded-full border-2 border-teal-300/50 z-[9000] mix-blend-screen"
+      className="fixed pointer-events-none rounded-full border border-white/20 z-[9000] mix-blend-overlay backdrop-blur-[2px]"
       style={{
         left: x - 50,
         top: y - 50,
         width: 100,
         height: 100,
+        boxShadow: 'inset 0 0 20px rgba(255,255,255,0.05)'
       }}
     />
   );

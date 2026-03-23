@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ocean-light: #add8e6;
-  --color-ocean-dark: #00050a;
+  --color-ocean-light: #020617;
+  --color-ocean-dark: #000000;
+  --font-sans: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 @layer base {
@@ -10,5 +12,11 @@
     background-color: var(--color-ocean-light);
     color: white;
     overflow-x: hidden;
+    font-family: var(--font-sans);
   }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }

@@ -1,8 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const creatures = [
   { name: "Anglerfish", desc: "Uses a bioluminescent lure to attract prey in total darkness." },
@@ -63,44 +60,49 @@ function TiltCard({ creature }) {
   );
 }
 
-export default function MidnightZone({ splineApp }) {
-  const sectionRef = useRef(null);
+export default function MidnightZone() {
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  useEffect(() => {
-    if (!splineApp) return;
-
-    // Grab a main object in the Spline scene to rotate.
-    // Replace 'Shape' with your specific exact Spline object name (e.g. 'Shark')
-    let targetObj = splineApp.findObjectByName('Shape') || 
-                    splineApp.findObjectByName('Cube') || 
-                    splineApp.findObjectByName('GlassShark');
-
-    if (targetObj) {
-      const trigger = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        onUpdate: (self) => {
-          // Rotate 360 degrees
-          targetObj.rotation.y = self.progress * Math.PI * 2;
-        }
-      });
-      return () => trigger.kill();
-    }
-  }, [splineApp]);
+  // Bio-Pulse interaction
+  const triggerBioPulse = () => {
+    setShowTooltip(true);
+    // Auto-hide tooltip after 4 seconds
+    setTimeout(() => setShowTooltip(false), 4000);
+  };
 
   return (
-    <section ref={sectionRef} className="w-full min-h-screen py-32 px-4 md:px-16 flex flex-col items-center justify-center pointer-events-none">
+    <section className="w-full min-h-screen py-32 px-4 md:px-16 flex flex-col items-center justify-center pointer-events-none">
       <div className="max-w-6xl w-full mx-auto text-center mb-16 z-10 pointer-events-auto">
         <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-widest opacity-80 mb-6 drop-shadow-lg">
           The Midnight Zone
         </h2>
-        <p className="text-xl text-white/70 max-w-2xl mx-auto">
-          No sunlight reaches these depths. The only light comes from bioluminescence. Scroll to investigate the 3D model from all angles.
+        <p className="text-xl text-white/70 max-w-2xl mx-auto mb-8 font-light">
+          No sunlight reaches these depths. The only light comes from bioluminescence. Scroll to rotate the specimen, or scan to reveal anomalies.
         </p>
+
+        <button 
+          onClick={triggerBioPulse}
+          className="group relative inline-flex items-center justify-center px-8 py-3 font-mono font-bold text-teal-300 bg-teal-900/20 backdrop-blur-md border border-teal-500/30 rounded-full hover:bg-teal-800/40 transition-all duration-300 shadow-[0_0_20px_rgba(45,212,191,0.2)]"
+        >
+          INITIATE BIO-PULSE
+          <div className="absolute inset-0 bg-teal-400/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 w-full max-w-6xl mx-auto z-10" style={{ perspective: "1000px" }}>
+      <div className={`absolute top-[40%] md:top-[50%] right-[10%] md:right-[20%] max-w-xs transition-opacity duration-700 pointer-events-none z-10 ${showTooltip ? 'opacity-100 -translate-y-4' : 'opacity-0 translate-y-0'}`}>
+        <div className="bg-black/60 backdrop-blur-xl border border-teal-500/40 p-6 rounded-2xl shadow-[0_0_30px_rgba(45,212,191,0.3)]">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-2 w-2 bg-teal-400 rounded-full animate-pulse" />
+            <h4 className="font-mono text-teal-300 font-bold tracking-widest text-sm">BIO-LUMINESCENT NODE</h4>
+          </div>
+          <p className="text-white/80 font-light text-sm leading-relaxed">
+            Specialized photophores emit pale blue light to counter-illuminate the body against the faint downwelling light, masking its silhouette from predators swimming below.
+          </p>
+        </div>
+        <div className="absolute top-1/2 -left-16 w-16 h-px bg-teal-500/50" />
+      </div>
+
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3 w-full max-w-6xl mx-auto z-10 pointer-events-none" style={{ perspective: "1000px" }}>
         {creatures.map((c, i) => (
           <TiltCard key={i} creature={c} />
         ))}

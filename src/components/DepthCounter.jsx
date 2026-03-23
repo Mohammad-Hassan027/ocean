@@ -8,14 +8,13 @@ export default function DepthCounter() {
   const depthRef = useRef(null);
 
   useEffect(() => {
-    const maxDepth = 11000; // Mariana Trench depth
+    const maxDepth = 10935; // Challenger Deep narrative depth
     
     const trigger = ScrollTrigger.create({
       trigger: document.body,
       start: "top top",
       end: "bottom bottom",
       onUpdate: (self) => {
-        // Linear mapping from scroll progress to depth
         const depth = Math.round(self.progress * maxDepth);
         if (depthRef.current) {
           depthRef.current.innerText = `${depth.toLocaleString()}m`;
@@ -27,9 +26,9 @@ export default function DepthCounter() {
   }, []);
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full text-white/90 font-mono text-xs md:text-sm tracking-wider shadow-lg">
-      <span className="opacity-80">Depth:</span>
-      <span ref={depthRef} className="font-bold w-16 text-right">0m</span>
+    <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-black/20 backdrop-blur-[12px] border border-white/10 px-6 py-3 rounded-full text-white/90 font-mono text-sm tracking-wider shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+      <span className="opacity-40 text-xs tracking-[0.2em] uppercase">Depth</span>
+      <span ref={depthRef} className="font-bold w-[72px] text-right text-teal-100/90">0m</span>
     </div>
   );
 }
