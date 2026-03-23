@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ocean-light: #add8e6;
+  --color-ocean-dark: #00050a;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-ocean-light);
+    color: white;
+    overflow-x: hidden;
+  }
+}
