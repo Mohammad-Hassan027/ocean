@@ -1,99 +1,87 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import MagneticButton from '../components/MagneticButton';
-
-const bentoData = [
-  { 
-    title: "BIOLUMINESCENCE", 
-    desc: "A chemical reaction producing localized cold light. Organisms rely on Luciferin oxidization for survival communication.", 
-    class: "md:col-span-2 md:row-span-2 flex flex-col justify-end" 
-  },
-  { 
-    title: "VAMPIRE SQUID", 
-    desc: "Vampyroteuthis infernalis. Reverses its mantle to expose threatening arm spines.", 
-    class: "md:col-span-1 md:row-span-1 flex flex-col justify-center" 
-  },
-  { 
-    title: "ABYSSAL GIGANTISM", 
-    desc: "Deep-sea isolation leads to extreme evolutionary scaling sizes.", 
-    class: "md:col-span-1 md:row-span-2 flex flex-col justify-start" 
-  },
-  { 
-    title: "ANGLER LURE", 
-    desc: "The escal light organ mimics floating debris.", 
-    class: "md:col-span-1 md:row-span-1 flex flex-col justify-end" 
-  }
-];
 
 export default function MidnightZone() {
-  const [showTooltip, setShowTooltip] = useState(false);
+  const sectionRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: '50%', y: '50%' });
 
-  const triggerBioPulse = () => {
-    setShowTooltip(true);
-    setTimeout(() => setShowTooltip(false), 4000);
-  };
+  useEffect(() => {
+    const handleMouse = (e) => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        // Calculate relative to the section
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setMousePos({ x: `${x}px`, y: `${y}px` });
+      }
+    };
+    
+    window.addEventListener('mousemove', handleMouse);
+    return () => window.removeEventListener('mousemove', handleMouse);
+  }, []);
 
   return (
-    <section className="w-full min-h-screen py-32 px-4 md:px-16 flex flex-col items-center justify-center pointer-events-none relative z-10 w-full">
-      <div className="max-w-6xl w-full mx-auto text-center mb-16 z-10 pointer-events-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: 50, skewY: 5 }}
-          whileInView={{ opacity: 1, y: 0, skewY: 0 }}
-          viewport={{ once: false, margin: "-10%" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-widest opacity-90 mb-6 drop-shadow-[0_0_40px_rgba(45,212,191,0.3)]">
-            The Midnight Zone
-          </h2>
-        </motion.div>
-        <p className="text-xl text-teal-100/50 max-w-2xl mx-auto mb-12 font-mono tracking-widest uppercase text-sm">
-          Absence of photons. Sensory deprivation.
-        </p>
-
-        <MagneticButton 
-          onClick={triggerBioPulse}
-          className="group inline-flex items-center justify-center px-10 py-4 font-mono font-bold text-teal-300 bg-black/40 backdrop-blur-3xl border border-teal-500/20 rounded-full hover:bg-white/5 transition-all duration-500 shadow-[0_0_30px_rgba(45,212,191,0.1)] hover:shadow-[0_0_50px_rgba(45,212,191,0.3)]"
-        >
-          INITIATE BIO-PULSE
-          <div className="absolute inset-0 bg-teal-400/10 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </MagneticButton>
-      </div>
-
-      <div className={`absolute top-[60%] md:top-[40%] right-[5%] md:right-[15%] max-w-xs transition-opacity duration-700 pointer-events-none z-20 ${showTooltip ? 'opacity-100 -translate-y-4' : 'opacity-0 translate-y-0'}`}>
-        <div className="bg-black/80 backdrop-blur-3xl border border-teal-500/30 p-6 shadow-[0_0_50px_rgba(45,212,191,0.2)]">
-          <div className="flex items-center gap-3 mb-4 border-b border-teal-500/20 pb-4">
-            <div className="h-2 w-2 bg-teal-400 rounded-full animate-pulse" />
-            <h4 className="font-mono text-teal-300 font-bold tracking-[0.2em] text-xs">BIO-NODE ACTIVE</h4>
+    <section ref={sectionRef} className="relative w-full min-h-[120vh] py-32 overflow-hidden bg-black text-white">
+      
+      {/* Submersible Spotlight Mask Overlay */}
+      {/* This renders pure black everywhere EXCEPT the 300px circle around the mouse */}
+      <div 
+        className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-1000"
+        style={{
+          background: `radial-gradient(circle 250px at ${mousePos.x} ${mousePos.y}, transparent 0%, rgba(0,0,0,0.95) 80%, black 100%)`
+        }}
+      />
+      
+      {/* Base Content (Only visible through the spotlight) */}
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 pt-32 h-full flex flex-col pointer-events-auto">
+        
+        <div className="max-w-3xl mb-32">
+          <div className="inline-flex items-center gap-3 border border-white/20 px-4 py-2 rounded-full mb-6">
+             <div className="w-2 h-2 bg-yellow-500 rounded-full animate-blink" />
+             <span className="font-mono text-white/50 text-[10px] tracking-[0.2em] uppercase">Depth 1,000m — 4,000m</span>
           </div>
-          <p className="text-white/60 font-mono text-xs leading-relaxed tracking-wider uppercase">
-            Photophores emitting localized light to counter-illuminate the silhouette. Predator evasion successful.
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            className="text-5xl md:text-7xl font-sans font-black uppercase tracking-tighter leading-[0.9] text-teal-50 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]"
+          >
+            SELF-GENERATED<br/>LIGHT
+          </motion.h2>
+          
+          <p className="mt-8 text-xl text-teal-100/60 font-serif italic max-w-2xl leading-relaxed">
+            "In eternal darkness, evolution creates its own stars."
+          </p>
+          <p className="mt-6 text-lg text-white/40 font-sans font-light max-w-2xl leading-relaxed">
+            Welcome to the Bathypelagic. Sunlight is extinct. The only light here is the light you bring—or the light that hunts you.
           </p>
         </div>
-      </div>
 
-      {/* Luxury Bento Box Gallery */}
-      <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 w-full max-w-7xl mx-auto z-10 h-[800px] md:h-[600px] pointer-events-auto">
-        {bentoData.map((item, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, margin: "-5%" }}
-            transition={{ duration: i * 0.2 + 0.5, ease: "easeOut" }}
-            className={`group relative bg-white/[0.02] backdrop-blur-3xl border border-white/5 p-8 overflow-hidden hover:bg-white/[0.04] transition-colors duration-700 ${item.class}`}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
-            <div className="relative z-10 transform group-hover:-translate-y-2 transition-transform duration-500">
-              <h3 className="text-xl md:text-3xl font-bold text-teal-100/80 mb-4 font-sans tracking-wide">{item.title}</h3>
-              <p className="text-white/50 font-mono text-xs leading-relaxed tracking-widest uppercase">
-                {item.desc}
-              </p>
-            </div>
-            <div className="absolute top-0 right-0 p-4 font-mono text-white/10 text-6xl font-black group-hover:text-teal-500/10 transition-colors duration-700 pointer-events-none">
-              0{i + 1}
-            </div>
-          </motion.div>
-        ))}
+        {/* Hidden Bioluminescent Creatures / Data scattered around */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-32 relative">
+          
+          <div className="p-8 border-l border-teal-500/30">
+            <h3 className="text-3xl font-bold text-teal-400 mb-4">5,850 P.S.I.</h3>
+            <p className="text-white/50 text-sm leading-relaxed font-mono tracking-wider">
+              At 4,000 meters, the ambient pressure reaches almost 6,000 pounds per square inch. This is enough compression to instantly crush almost any standard terrestrial vessel. Yet, soft-bodied organisms thrive.
+            </p>
+          </div>
+
+          <div className="p-8 border-r border-teal-400 text-right md:-mt-16">
+            <h3 className="text-3xl font-bold text-teal-200 mb-4">Bioluminescent Lures</h3>
+            <p className="text-white/50 text-sm leading-relaxed font-mono tracking-wider">
+              Over 90% of species at this depth utilize light-producing organs (photophores). They flash to attract mates, blind predators, or lure prey directly into their jaws.
+            </p>
+          </div>
+
+        </div>
+        
+        {/* Hidden UI hint outside the spotlight focus */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 font-mono text-[10px] text-white/20 tracking-widest text-center">
+          USE SPOTLIGHT TO SEARCH THE PERIMETER
+        </div>
+
       </div>
     </section>
   );

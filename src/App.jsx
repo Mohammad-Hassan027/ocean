@@ -73,7 +73,7 @@ export default function App() {
         trigger: document.body,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.5
+        scrub: 1
       }
     });
 

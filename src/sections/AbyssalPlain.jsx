@@ -1,102 +1,117 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion } from 'framer-motion';
-
-gsap.registerPlugin(ScrollTrigger);
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AbyssalPlain() {
-  const textContainerRef = useRef(null);
-  const filterWrapperRef = useRef(null);
-
-  useEffect(() => {
-    // Chromatic Aberration & Lens Stress mapped to extreme depths (Abyssal Zone)
-    const trigger = ScrollTrigger.create({
-      trigger: textContainerRef.current,
-      start: "top bottom",
-      end: "bottom top",
-      onUpdate: (self) => {
-        if (filterWrapperRef.current) {
-          // Intense Chromatic Aberration as you scroll through the section
-          // Use drop-shadow sparingly, max 6px deviation
-          const intensity = Math.sin(self.progress * Math.PI) * 6;
-          filterWrapperRef.current.style.filter = `drop-shadow(${intensity}px 0 rgba(255,0,0,0.4)) drop-shadow(${-intensity}px 0 rgba(0,255,255,0.4))`;
-        }
-      }
-    });
-
-    const glitchTrigger = ScrollTrigger.create({
-      trigger: textContainerRef.current,
-      start: "top center",
-      end: "bottom center",
-      onEnter: () => {
-        gsap.to(textContainerRef.current, {
-          x: "random(-10, 10, 1)",
-          y: "random(-4, 4, 1)",
-          skewX: "random(-5, 5)",
-          duration: 0.05,
-          repeat: 15,
-          yoyo: true,
-          ease: "none",
-          onComplete: () => {
-             gsap.set(textContainerRef.current, { x: 0, y: 0, skewX: 0 });
-          }
-        });
-      }
-    });
-
-    return () => {
-      trigger.kill();
-      glitchTrigger.kill();
-    };
-  }, []);
+  const [showTaxonomy, setShowTaxonomy] = useState(false);
 
   return (
-    <section className="w-full min-h-screen py-32 px-4 md:px-16 flex flex-col items-center justify-center">
+    <section className="w-full min-h-[120vh] py-32 px-4 md:px-16 flex flex-col items-center justify-center relative bg-[#010308]">
       
-      {/* Wrapper using will-change filter to safely apply Chromatic Aberration */}
-      <div ref={filterWrapperRef} className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center z-10 pointer-events-none will-change-[filter] transition-all duration-75">
+      {/* Absolute CSS Animated "Sassy Sparkler" Polychaete Worm looping in background */}
+      <div className="absolute top-[20%] right-[10%] w-64 h-64 mix-blend-screen opacity-20 pointer-events-none z-0">
+        <svg viewBox="0 0 200 200" className="w-full h-full animate-[spin_30s_linear_infinite]">
+           {/* An iridescent undulating glowing path */}
+           <path d="M 10 100 C 50 20, 150 20, 190 100 C 150 180, 50 180, 10 100" fill="transparent" stroke="url(#sparkle)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 20" className="animate-[pulse_2s_ease-in-out_infinite]" />
+           <defs>
+             <linearGradient id="sparkle" x1="0%" y1="0%" x2="100%" y2="100%">
+               <stop offset="0%" stopColor="#2dd4bf" />
+               <stop offset="50%" stopColor="#818cf8" />
+               <stop offset="100%" stopColor="#e879f9" />
+             </linearGradient>
+           </defs>
+        </svg>
+      </div>
+
+      <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center z-10">
         
-        <div ref={textContainerRef} className="space-y-8">
-          <div className="inline-flex items-center gap-4 bg-red-900/10 border border-red-500/20 px-6 py-2 rounded-none mb-4 backdrop-blur-xl">
-             <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
-             <span className="font-mono text-red-500 text-[10px] tracking-[0.4em] uppercase font-bold">Structural Stress Critical</span>
+        <div className="space-y-8">
+          <div className="inline-flex items-center gap-3 bg-indigo-900/30 border border-indigo-500/30 px-5 py-2 rounded-full mb-4">
+             <span className="font-mono text-indigo-300 text-[10px] tracking-[0.3em] uppercase">4,000m — 11,000m</span>
           </div>
 
-          {/* Kinetic Skew Heading */}
           <motion.div
-            initial={{ opacity: 0, rotateX: -45, y: 100 }}
-            whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
-            viewport={{ once: false, margin: "0%" }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: false }}
+            transition={{ duration: 1 }}
           >
-            <h2 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter drop-shadow-2xl mix-blend-screen leading-none">
-              ABYSSAL<br/>PLAIN
+            <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter drop-shadow-2xl leading-none">
+              THE GHOST IN<br/>THE MACHINE
             </h2>
           </motion.div>
           
-          <div className="h-px w-32 bg-white/20" />
+          <div className="h-px w-24 bg-indigo-500/50" />
           
-          <p className="text-xl text-white/50 leading-relaxed font-sans font-light">
-            4,000 meters. The immense pressure compresses the submersible's hull, resulting in auditory stress pops and micro-structural fracturing.
+          <p className="text-xl text-white/60 leading-relaxed font-sans font-light">
+            We expected a void. Instead, we found a geological battery—and a tragic footprint of our own making. 
+          </p>
+          <p className="text-lg text-white/40 leading-relaxed font-sans font-light border-l-2 border-indigo-500/30 pl-4">
+            In 2024, scientists discovered <strong className="text-indigo-300">"Dark Oxygen"</strong>: ancient polymetallic nodules on the seafloor producing oxygen without sunlight, acting as natural geobatteries splitting seawater.
           </p>
         </div>
 
-        {/* Abstract Luxury Visual Block */}
-        <div className="relative aspect-square md:h-[500px] flex justify-end flex-col overflow-hidden bg-black/80 backdrop-blur-3xl border-l-4 border-white/10 p-12 shadow-2xl pointer-events-none mix-blend-screen will-change-transform">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent opacity-50"></div>
-          
-          <div className="relative z-10 w-full font-mono">
-            <h3 className="text-3xl font-bold tracking-[0.2em] text-white/40 mb-6 uppercase">Environment</h3>
-            <div className="space-y-4 border-t border-white/5 pt-6">
-              <div className="flex justify-between text-xs text-white/30 tracking-widest"><span className="uppercase">Temp</span><span className="text-teal-500">2°C</span></div>
-              <div className="flex justify-between text-xs text-white/30 tracking-widest"><span className="uppercase">Pressure</span><span className="text-red-500">400 ATM</span></div>
-              <div className="flex justify-between text-xs text-white/30 tracking-widest"><span className="uppercase">Light</span><span className="text-white">0.00%</span></div>
-            </div>
-          </div>
+        <div className="relative flex flex-col items-center justify-center p-8 bg-black/40 backdrop-blur-3xl border border-white/5 shadow-2xl rounded-2xl">
+          <h3 className="text-2xl font-bold text-white/80 mb-6 uppercase tracking-widest text-center font-sans">
+             Specimen Recovery
+          </h3>
+          <p className="text-center text-white/40 font-mono text-xs mb-8">
+            Recovered at 6,900 meters. A species never before seen by human eyes.
+          </p>
+
+          <button 
+            onClick={() => setShowTaxonomy(true)}
+            className="group relative inline-flex items-center justify-center px-8 py-3 font-mono font-bold text-red-400 bg-red-900/20 border border-red-500/30 hover:bg-red-800/40 transition-all duration-300 shadow-[0_0_20px_rgba(248,113,113,0.1)]"
+          >
+            PULL TAXONOMIC RECORD
+            <div className="absolute inset-0 bg-red-400/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
         </div>
 
       </div>
+
+      {/* Visceral Modal: The PET Fiber Truth */}
+      <AnimatePresence>
+        {showTaxonomy && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-[#0a0a0a] border border-white/10 max-w-2xl w-full p-8 md:p-12 shadow-2xl relative"
+            >
+              <button onClick={() => setShowTaxonomy(false)} className="absolute top-6 right-6 text-white/40 hover:text-white font-mono text-xs">CLOSE [X]</button>
+              
+              <div className="flex items-center gap-4 border-b border-white/10 pb-6 mb-8">
+                 <div className="w-16 h-16 bg-white/5 flex items-center justify-center font-mono text-white/20 text-xs text-center border border-white/10">IMG_REDACTED</div>
+                 <div>
+                   <h4 className="text-xl font-bold text-white uppercase tracking-wider">Eurythenes plasticus</h4>
+                   <p className="font-mono text-xs text-white/40">IDENTIFIED: 2020 | DEPTH: 6,900M</p>
+                 </div>
+              </div>
+
+              <div className="space-y-6 text-white/80 font-serif leading-relaxed text-lg">
+                <p>
+                  A new species of amphipod was discovered in the Mariana Trench. It was a monumental achievement for deep-sea biology.
+                </p>
+                <div className="bg-red-900/10 border-l-2 border-red-500 p-4">
+                  <p className="text-red-200">
+                    Inside its hindgut, researchers found a microplastic fiber <strong className="text-red-400 font-mono tracking-widest text-sm bg-red-500/10 px-1">0.65mm</strong> long. It was 83% identical to polyethylene terephthalate (PET) — the plastic used in water bottles.
+                  </p>
+                </div>
+                <p>
+                  We named it <em>Eurythenes plasticus</em> because even in the deepest, most isolated environment on Earth, our trash had arrived before our scientists did.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 }
