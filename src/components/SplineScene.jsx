@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function SplineScene({ onLoad }) {
   const [app, setApp] = useState(null);
 
-  const sceneUrl = "https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode";
+  const sceneUrl = "https://prod.spline.design/i3PXG2k9f8sLcqrg/scene.splinecode";
 
   const handleLoad = (splineApp) => {
     setApp(splineApp);

@@ -25,11 +25,11 @@ export default function MidnightZone() {
     <section ref={sectionRef} className="relative w-full min-h-[120vh] py-32 overflow-hidden bg-black text-white">
       
       {/* Submersible Spotlight Mask Overlay */}
-      {/* This renders pure black everywhere EXCEPT the 300px circle around the mouse */}
+      {/* This renders pure black everywhere EXCEPT the 500px circle around the mouse */}
       <div 
         className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-1000"
         style={{
-          background: `radial-gradient(circle 250px at ${mousePos.x} ${mousePos.y}, transparent 0%, rgba(0,0,0,0.95) 80%, black 100%)`
+          background: `radial-gradient(circle 500px at ${mousePos.x} ${mousePos.y}, transparent 0%, rgba(0,0,0,0.95) 80%, black 100%)`
         }}
       />
       
